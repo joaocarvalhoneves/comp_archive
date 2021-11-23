@@ -1,0 +1,146 @@
+<!DOCTYPE html><html lang=""><head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
+  
+  <meta name="theme-color" content="#fafafa">
+
+  <link rel="stylesheet" href="assets/style/style.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,200;0,300;1,200&display=swap" rel="stylesheet"> 
+
+ 
+
+</head>
+
+<body id="boody">
+
+  <img id="noise" src="assets/img/noise.jpg">
+
+  <div id="titulo" class="overlay">
+    <h1>comp archive(){</h1>
+    <h2>// a computational design archive</h2>
+  </div>
+
+  <div id="filter" class="unclicked overlay" onclick="press(this, 1);">
+    <p>filter</p>
+  </div>
+
+  <div id="submit" class="unclicked overlay" onclick="press(this, 1);">
+    <p>submit</p>
+  </div>
+
+  <div id="about" class="unclicked overlay" onclick="press(this, 1);">
+    <p>about</p>
+  </div>
+
+  <div id="agents" class="unclicked overlay" onclick="press(this, 1);">
+    <p>agents</p>
+  </div>
+
+  <div id="editorial" class="unclicked overlay" onclick="press(this, 1);">
+    <p>editorial</p>
+  </div>
+
+  <div id="lupa" class="unclicked overlay" onclick="press(this, 1);">
+    <p>🔍</p>
+  </div>
+
+
+  <div id="tit" class="overlay" >
+    <p>Titulo do projeto</p>
+  </div>
+
+  <div id="desc" class="overlay" >
+    <p>Descrição do projeto</p>
+  </div>
+
+  <div id="cat" class="overlay" >
+    <p>categoria</p>
+  </div>
+
+  <div id="aut" class="overlay" >
+    <p>autor do projeto</p>
+  </div>
+
+  <img id="im1" class="overlay" src="assets/img/test.png">
+
+  <img id="im2" class="overlay" src="assets/img/test.png">
+
+  <div id="txt" class="overlay" >
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  </div>
+  
+
+
+    <script>
+      //projetos [id, tipo, titulo, descição]
+      var array_projetos = [
+  [0, 'audio', 'projeto sonorizacao', 'este é um projeto de audio descrição descrição descrição descrição'],
+  [1, 'audio', 'projeto audio', 'este é um projeto de audio descrição descrição descrição descrição'],
+  [2, 'audio', 'projeto som', 'este é um projeto de som descrição descrição descrição descrição'],
+  [3, 'audio', 'projeto musica', 'este é um projeto de musica descrição descrição descrição descrição'],
+  [4, 'audio', 'projeto sonoro', 'este é um projeto sonoro descrição descrição descrição descrição'],
+  [5, 'audio', 'projeto melódico', 'este é um projeto melódico descrição descrição descrição descrição'],
+  [6, 'video', 'projeto video', 'este é um projeto de video descrição descrição descrição descrição'],
+  [7, 'video', 'projeto filme', 'este é um projeto de filme descrição descrição descrição descrição'],
+  [8, 'video', 'projeto gravação', 'este é um projeto de gravação descrição descrição descrição descrição'],
+  [9, 'video', 'projeto cinema', 'este é um projeto de cinema descrição descrição descrição descrição'],
+  [10, 'video', 'projeto curta', 'este é um projeto de curta descrição descrição descrição descrição'],
+  [11, 'app', 'projeto app', 'este é um projeto de app descrição descrição descrição descrição'],
+  [12, 'app', 'projeto programa', 'este é um projeto de programa descrição descrição descrição descrição'],
+  [13, 'app', 'projeto jogo', 'este é um projeto de jogo descrição descrição descrição descrição'],
+  [14, 'app', 'projeto interativo', 'este é um projeto interativo descrição descrição descrição descrição'],
+  [15, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição'],
+  [16, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição'],
+  [17, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição'],
+  [18, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição'],
+  [19, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição'],
+  [20, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição'],
+  [21, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição'],
+  [22, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição'],
+  [23, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição'],
+  [24, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição'],
+  [25, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição'],
+  [26, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição'],
+  [27, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição'],
+  [28, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição'],
+  [29, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição'],
+  [30, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição'],
+  [31, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição'],
+  [32, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição'],
+  [33, 'app', 'projeto brincadeira', 'este é um projeto brincadeira descrição descrição descrição descrição']
+];
+      
+      //ir buscar array de tipos de projeto
+      var tipos = ['audio', 'video', 'app'];
+
+      
+
+      
+      </script>
+ <script src="assets/script/script.js"></script>
+ <script src="assets/script/projeto.js"></script>
+      
+    
+  <script src="js/vendor/modernizr-3.11.2.min.js"></script>
+  <script src="js/plugins.js"></script>
+  <script src="js/main.js"></script>
+
+ 
+
+
+
+</body></html>

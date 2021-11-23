@@ -1,0 +1,210 @@
+html, body {
+  margin: 0;
+  padding: 0; }
+
+body {
+  cursor: grab;
+  background-color: #d5d5d5;
+  overflow: hidden;
+  cursor: crosshair; }
+
+.overlay {
+  position: absolute;
+  box-sizing: border-box;
+  z-index: 4;
+  background-color: #d5d5d5;
+  border-style: solid;
+  border-color: #787878;
+  transition: opacity 0.1s; }
+
+#noise {
+  z-index: 7;
+  position: absolute;
+  overflow: hidden;
+  opacity: 0.015;
+  pointer-events: none; }
+
+#titulo, #tit, #desc, #cat, #aut, #im1, #im2, #txt, #titabt, #auth, #submm {
+  border-width: 0.5px; }
+
+#tit > p, #titabt > p {
+  font-size: 17px;
+  font-weight: normal; }
+
+#tit, #desc, #cat, #aut, #im1, #im2, #txt, #lupa, #filter, #titabt, #auth, #submm {
+  transition: opacity 0.1s;
+  animation: opcty 1s linear; }
+
+@keyframes opcty {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+#desc > p, #cat > p {
+  font-size: 16px;
+  line-height: 25px; }
+#desc > span, #cat > span {
+  font-family: "JetBrains Mono", monospace;
+  color: #5a5a5a; }
+
+.fit {
+  width: 44%;
+  margin-left: 4%;
+  margin-top: 4%;
+  display: inline-block; }
+  .fit > input {
+    width: 96%;
+    font-family: "JetBrains Mono", monospace;
+    background-color: transparent;
+    border: none;
+    border-bottom: solid 1px #5a5a5a; }
+  .fit > p {
+    font-family: "JetBrains Mono", monospace; }
+
+.full {
+  margin-left: 4%;
+  width: 92%; }
+  .full > input, .full > textarea {
+    width: 99%;
+    background-color: transparent;
+    border: none;
+    border-bottom: solid 1px #5a5a5a;
+    font-family: "JetBrains Mono", monospace; }
+  .full > p {
+    font-family: "JetBrains Mono", monospace; }
+
+#subsub {
+  background-color: #e6e6e6;
+  border: solid 1px #5a5a5a; }
+
+#titulo > h1, #titulo > h2 {
+  font-family: "JetBrains Mono", monospace;
+  padding: 0px;
+  margin: 0px;
+  padding-left: 15px;
+  color: #787878; }
+
+#titulo > h1 {
+  font-weight: 300;
+  font-size: 22px;
+  padding-top: 20px; }
+
+#titulo > h2 {
+  font-weight: 200;
+  font-style: italic;
+  font-size: 12px;
+  padding-top: 10px; }
+
+.overlay > p {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 300;
+  font-size: 14px;
+  color: #787878;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  text-align: center;
+  width: 100%; }
+
+#tit > p, #desc > p, #aut > p, #im1 > p, #im2 > p, #txt > p, #auth > p {
+  text-align: left;
+  padding-left: 1vw;
+  width: 97%; }
+
+#auth > p {
+  line-height: 25px;
+  font-size: 15px;
+  width: 95%; }
+
+.unclicked {
+  border-width: 1px 4px 4px 1px; }
+
+.clicked {
+  border-width: 4px 1px 1px 4px;
+  margin-left: 3px;
+  margin-top: 3px; }
+
+.filtros {
+  position: absolute;
+  height: 0px;
+  top: 0px;
+  color: #787878;
+  transition: height 0.2s, top 0.2s, border-width 0.2s;
+  border-width: 0px; }
+
+.filtros > p {
+  font-size: 0px;
+  transition: font-size 0.2s; }
+
+.grelha {
+  position: absolute; }
+
+vl, hr {
+  position: absolute;
+  display: inline-block;
+  margin: none;
+  padding: none; }
+
+hr {
+  height: 0px; }
+
+.grelha > hr, .grelha > vl {
+  border: 1px solid rgba(120, 120, 120, 0.5); }
+
+.audio {
+  background-color: #4b8e6f; }
+
+.video {
+  background-color: #e29558; }
+
+.app {
+  background-color: #db7679; }
+
+.projeto {
+  animation: opcty 1s linear;
+  transition: top 0.5s, left 0.5s, width 0.5s, height 0.5s, opacity 1s; }
+  .projeto > p {
+    color: black;
+    width: 90%;
+    padding-left: 5%;
+    transition: font-size 0.1s;
+    transition: opacity 0.5s, font-size 0.1s;
+    font-family: "JetBrains Mono", monospace; }
+    .projeto > p:nth-child(1) {
+      padding-top: 0px;
+      line-height: 25px; }
+    .projeto > p:nth-child(2) {
+      line-height: 18px; }
+  .projeto > img {
+    position: absolute;
+    bottom: 37px;
+    width: 90%;
+    padding-left: 5%;
+    pointer-events: none;
+    transition: opacity 0.5s; }
+
+.grayscale {
+  filter: grayscale(1); }
+
+.normal > p {
+  font-size: 0px;
+  opacity: 0; }
+  .normal > p:nth-child(1) {
+    font-size: 0px; }
+.normal > img {
+  height: 0px;
+  opacity: 0; }
+
+.expandido > p {
+  font-size: 12px;
+  opacity: 1; }
+  .expandido > p:nth-child(1) {
+    font-size: 18px;
+    margin-bottom: 0px; }
+.expandido > img {
+  height: auto;
+  opacity: 1; }
+
+/*# sourceMappingURL=style.css.map */

@@ -1,0 +1,167 @@
+<!DOCTYPE html><html lang=""><head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
+  
+  <meta name="theme-color" content="#fafafa">
+
+  <link rel="stylesheet" href="assets/style/style.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,200;0,300;1,200&display=swap" rel="stylesheet"> 
+
+ 
+
+</head>
+
+<body id="boody">
+
+  <img id="noise" src="assets/img/noise.jpg">
+
+  <div id="titulo" class="overlay">
+    <h1>comp archive(){</h1>
+    <h2>// a computational design archive</h2>
+  </div>
+
+  <div id="filter" class="unclicked overlay" onclick="press(this, 1);">
+    <p>filter</p>
+  </div>
+
+  <div id="submit" class="unclicked overlay" onclick="press(this, 1);">
+    <p>submit</p>
+  </div>
+
+  <div id="about" class="unclicked overlay" onclick="press(this, 1);">
+    <p>about</p>
+  </div>
+
+  <div id="agents" class="unclicked overlay" onclick="press(this, 1);">
+    <p>agents</p>
+  </div>
+
+  <div id="editorial" class="unclicked overlay" onclick="press(this, 1);">
+    <p>editorial</p>
+  </div>
+
+  <div id="lupa" class="unclicked overlay" onclick="press(this, 1);">
+    <p>🔍</p>
+  </div>
+
+
+  <div id="titabt" class="overlay" >
+    <p>submit project</p>
+  </div>
+
+  <form id="desc" class="overlay" >
+    <div class="fit">
+      <p>NAME</p>
+      <input placeholder="your name" type="text" name="nome">
+    </div>
+    <div class="fit">
+      <p>EMAIL</p>
+      <input placeholder="your email" type="text" name="email">
+    </div>
+    <div class="full">
+      <p>TITLE</p>
+      <input placeholder="project title" type="text" name="title">
+    </div>
+    <div class="fit">
+      <p>YEAR</p>
+      <input placeholder="project year" type="text" name="year">
+    </div>
+    <div class="fit">
+      <p>AUTHOR</p>
+      <input placeholder="project author" type="text" name="author">
+    </div>
+    <div class="full">
+      <p>ABSTRACT</p>
+      <textarea placeholder="summary..." type="text" name="abstract"> </textarea>
+    </div>
+    <div class="full">
+      <p>KEYWORDS</p>
+      <input placeholder="keywords..." type="text" name="keywords">
+    </div>
+  </form>
+
+      <div id="submm" class="overlay" >
+      <p>submit</p>
+    </div>
+
+  <div id="auth" class="overlay" >
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+  </div>
+
+
+
+    <script>
+      //projetos [id, tipo, titulo, descição]
+      var array_projetos = [
+  [0, 'audio', 'projeto sonorizacao', 'este é um projeto de audio'],
+  [1, 'audio', 'projeto audio', 'este é um projeto de audio'],
+  [2, 'audio', 'projeto som', 'este é um projeto de som'],
+  [3, 'audio', 'projeto musica', 'este é um projeto de musica'],
+  [4, 'audio', 'projeto sonoro', 'este é um projeto sonoro'],
+  [5, 'audio', 'projeto melódico', 'este é um projeto melódico'],
+  [6, 'video', 'projeto video', 'este é um projeto de video'],
+  [7, 'video', 'projeto filme', 'este é um projeto de filme'],
+  [8, 'video', 'projeto gravação', 'este é um projeto de gravação'],
+  [9, 'video', 'projeto cinema', 'este é um projeto de cinema'],
+  [10, 'video', 'projeto curta', 'este é um projeto de curta'],
+  [11, 'app', 'projeto app', 'este é um projeto de app'],
+  [12, 'app', 'projeto programa', 'este é um projeto de programa'],
+  [13, 'app', 'projeto jogo', 'este é um projeto de jogo'],
+  [14, 'app', 'projeto interativo', 'este é um projeto interativo'],
+  [15, 'app', 'projeto brincadeira', 'este é um projeto brincadeira'],
+  [16, 'app', 'projeto brincadeira', 'este é um projeto brincadeira'],
+  [17, 'app', 'projeto brincadeira', 'este é um projeto brincadeira'],
+  [18, 'app', 'projeto brincadeira', 'este é um projeto brincadeira'],
+  [19, 'app', 'projeto brincadeira', 'este é um projeto brincadeira'],
+  [20, 'app', 'projeto brincadeira', 'este é um projeto brincadeira'],
+  [21, 'app', 'projeto brincadeira', 'este é um projeto brincadeira'],
+  [22, 'app', 'projeto brincadeira', 'este é um projeto brincadeira'],
+  [23, 'app', 'projeto brincadeira', 'este é um projeto brincadeira'],
+  [24, 'app', 'projeto brincadeira', 'este é um projeto brincadeira'],
+  [25, 'app', 'projeto brincadeira', 'este é um projeto brincadeira'],
+  [26, 'app', 'projeto brincadeira', 'este é um projeto brincadeira'],
+  [27, 'app', 'projeto brincadeira', 'este é um projeto brincadeira'],
+  [28, 'app', 'projeto brincadeira', 'este é um projeto brincadeira'],
+  [29, 'app', 'projeto brincadeira', 'este é um projeto brincadeira'],
+  [30, 'app', 'projeto brincadeira', 'este é um projeto brincadeira'],
+  [31, 'app', 'projeto brincadeira', 'este é um projeto brincadeira'],
+  [32, 'app', 'projeto brincadeira', 'este é um projeto brincadeira'],
+  [33, 'app', 'projeto brincadeira', 'este é um projeto brincadeira']
+];
+      
+      //ir buscar array de tipos de projeto
+      var tipos = ['audio', 'video', 'app'];
+
+      </script>
+
+
+
+ <script src="assets/script/script.js"></script>
+ <script src="assets/script/submit.js"></script>
+ 
+
+      
+    
+  <script src="js/vendor/modernizr-3.11.2.min.js"></script>
+  <script src="js/plugins.js"></script>
+  <script src="js/main.js"></script>
+
+ 
+
+
+
+</body></html>
