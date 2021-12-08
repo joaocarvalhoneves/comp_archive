@@ -1,3 +1,16 @@
+if(window.location.href.indexOf("index") > -1 && window.innerWidth<1000){
+  window.location.href = "editorial.html";
+}
+
+
+var naoepradescer=false;
+if(window.innerWidth<1000){
+  document.getElementById("noise").style.display="none";
+  document.getElementById("agents").style.display="none";
+
+}
+var whos_first=0;
+//window.addEventListener('resize', overlayback);
 
         //tamanho de cada quadradinho
     let tamanho_celula=50;
@@ -11,6 +24,38 @@
         return Math.floor(x/tamanho_celula)*tamanho_celula;
       }
 
+      function de_fault(){
+
+        if(whos_first==0){
+              document.getElementById("lupa").style.top=window.arredonda_cima(scrollY+window.innerHeight)-tamanho_celula*3-3+"px";
+              document.getElementById("lupa").style.left=window.arredonda_cima(scrollX+window.innerWidth)-tamanho_celula*6-3+"px";
+
+              document.getElementById("inps").style.width="0px";
+              document.getElementById("inps").style.left=document.getElementById("lupa").style.left;
+              document.getElementById("inps").style.zIndex="3";
+              document.getElementById("inps").classList.remove("clicked");
+
+              var inps=document.createElement("input");
+              inps.style.top=parseInt(docauxaux.style.top)+"px";
+                inps.style.left=parseInt(docauxaux.style.left)-4*tamanho_celula+"px";
+                inps.style.height=parseInt(docauxaux.style.height)+"px";
+                inps.style.width=parseInt(docauxaux.style.width)+4*tamanho_celula+"px";
+                document.getElementById("inps").style.opacity=1;
+                inps.classList.add("clicked");
+                inps.style.borderLeftWidth ="0px";
+
+                if(document.getElementById("lupa").classList.contains("clicked")){
+                  document.getElementById("lupa").classList.remove("clicked");
+                  document.getElementById("lupa").classList.add("unclicked");
+                  //largura e altura da caixa do filtro volta a aumentar
+                  document.getElementById("lupa").style.width=document.getElementById("lupa").offsetWidth+2+"px";
+                  document.getElementById("lupa").style.height=document.getElementById("lupa").offsetHeight+2+"px";
+                } 
+        }
+
+        whos_first=0;
+      }
+
 
       //criar botoes de filtro para ativar e desativar os projetos
       for(var i = 0; i < tipos.length; i++){
@@ -20,6 +65,10 @@
           filt.classList.add("filtros"); 
           filt.classList.add("uncheck"); 
           filt.classList.add("overlay"); 
+
+          filt.classList.add("unclicked");
+
+          filt.id=i;
           filt.name = ""+tipos[i];
           //acordeao filtros
           filt.onclick = function () {
@@ -27,7 +76,14 @@
            };
           txt.innerHTML=tipos[i];
           filt.appendChild(txt);
-          document.getElementById("filter").appendChild(filt);
+          if(window.innerWidth<1000){
+            filt.classList.add("unclicked");
+            document.body.appendChild(filt);
+            document.getElementById("filter").style.display="none";
+          }else{
+            document.getElementById("filter").appendChild(filt);
+          }
+          
           delete txt;
           delete filt;
         }
@@ -54,6 +110,8 @@
             this.em_movimento=false;
             this.stuck=false; 
             this.vel=1;//velocidade
+            this.tick=0;
+            this.qqtimeout=[];
 
             //decora se o projeto estava em grayscale antes de mouse over
             this.isgray=false;
@@ -73,9 +131,8 @@
               }
               this.em_movimento=true;
             }
-
+            var projectos = document.getElementsByClassName(this.id);
             //posicao atual aproxima-se do destino
-
             if(this.atualy>this.y){//anda cima
               this.atualy-=this.vel;
             }else if(this.atualx<this.x){//anda direita
@@ -89,41 +146,127 @@
               this.y+=this.vel;
               this.stuck=false;
             }
-
             //se o valor atual e o valor destino estiverem perto o suficiente, chegou ao destino 
             if(Math.abs(this.x-this.atualx)<0.01 && Math.abs(this.y-this.atualy)<0.01){
               this.atualx=this.x;
               this.atualy=this.y;
               this.em_movimento=false
             }
-
             //coloca o div do projeto na posicao certa
-            var projectos = document.getElementsByClassName(this.id);
+            
             for (var i = 0; i < projectos.length; i++) {
-
+              projectos[i].classList.add("projeto");
+              projectos[i].classList.remove("projeto_sem_anim");
               projectos[i].style.left=this.atualx*tamanho_celula-this.altura/2+"px";
               projectos[i].style.top=this.atualy*tamanho_celula-this.altura/2+"px";
-
             }
             /*document.getElementById(this.id).style.left=this.atualx*tamanho_celula+this.largura*1.5+"px";
             document.getElementById(this.id).style.top=this.atualy*tamanho_celula+this.altura*1.5+"px";*/
           }
 
+          tp(){
+            if(!this.em_movimento){
+              if(!this.ativo){
+                this.deambulando();
+              }else{
+                this.direcionando();
+              }
+              this.em_movimento=true;
+            }
+            var projectos = document.getElementsByClassName(this.id);
+            //posicao atual aproxima-se do destino
+            if(this.atualy==0){//tp cima
+                this.atualy=nlinhas;
+                this.y=nlinhas;
+
+                //coloca o div do projeto na posicao certa
+                for (var i = 0; i < projectos.length; i++) {
+                  projectos[i].classList.add("projeto_sem_anim");
+                  projectos[i].classList.remove("projeto");
+                  projectos[i].style.left=this.atualx*tamanho_celula-this.altura/2+"px";
+                  projectos[i].style.top=this.atualy*tamanho_celula-this.altura/2+"px";
+                }
+
+                if(!this.ativo){
+                  this.deambulando();
+                }else{
+                  this.direcionando();
+                }
+
+            }else if(this.atualy==nlinhas){//tp baixo
+                this.atualy=0;
+                this.y=0;
+
+                //coloca o div do projeto na posicao certa
+                for (var i = 0; i < projectos.length; i++) {
+                  projectos[i].classList.add("projeto_sem_anim");
+                  projectos[i].classList.remove("projeto");
+                  projectos[i].style.left=this.atualx*tamanho_celula-this.altura/2+"px";
+                  projectos[i].style.top=this.atualy*tamanho_celula-this.altura/2+"px";
+                }
+
+                if(!this.ativo){
+                  this.deambulando();
+                }else{
+                  this.direcionando();
+                }
+            }else if(this.atualx==0){//tp esquerda
+                this.atualx=ncolunas;
+                this.x=ncolunas;
+
+                //coloca o div do projeto na posicao certa
+                for (var i = 0; i < projectos.length; i++) {
+                  projectos[i].classList.add("projeto_sem_anim");
+                  projectos[i].classList.remove("projeto");
+                  projectos[i].style.left=this.atualx*tamanho_celula-this.altura/2+"px";
+                  projectos[i].style.top=this.atualy*tamanho_celula-this.altura/2+"px";
+                }
+
+                if(!this.ativo){
+                  this.deambulando();
+                }else{
+                  this.direcionando();
+                }
+            }else if(this.atualx==ncolunas){//tp direita
+                this.atualx=0;
+                this.x=0;
+
+                //coloca o div do projeto na posicao certa
+                for (var i = 0; i < projectos.length; i++) {
+                  projectos[i].classList.add("projeto_sem_anim");
+                  projectos[i].classList.remove("projeto");
+                  projectos[i].style.left=this.atualx*tamanho_celula-this.altura/2+"px";
+                  projectos[i].style.top=this.atualy*tamanho_celula-this.altura/2+"px";
+                }
+
+                if(!this.ativo){
+                  this.deambulando();
+                }else{
+                  this.direcionando();
+                }
+            }
+
+          }
+
           deambulando(){
             let auxmov=Math.random();
             //escolher pra que lado vai deambular a seguir
-            if(auxmov<0.25 && this.y>0 && !checkpos(this, this.x,this.y-1)){//deambula cima
-              this.y--;
-              cima++;
-            }else if(auxmov<0.50 && this.x<ncolunas-2 && !checkpos(this, this.x+1,this.y)){//deambula direita
-              this.x++;
-              direita++;
-            }else if(auxmov<=0.75 && this.y<nlinhas-2 && !checkpos(this, this.x,this.y+1)){//deambula baixo
-              this.y++;
-              baixo++;
-            }else if(auxmov<=1 && this.x>0 && !checkpos(this, this.x-1,this.y)){//deambula esquerda
-              this.x--;
-              esquerda++;
+            if(auxmov<0.25 && (this.y-1!=0 && !checkpos(this, this.x,this.y-1)) || (this.y-1==0 && !checkpos(this, this.x,nlinhas)) ){//deambula cima
+              if(this.y-1>=0){
+                this.y--;
+              }
+            }else if(auxmov<0.50  && (this.x+1!=ncolunas && !checkpos(this, this.x+1,this.y)) || (this.x+1==ncolunas && !checkpos(this, 0,this.y)) ){//deambula direita
+              if(this.x+1<=ncolunas){
+                this.x++;
+              }
+            }else if(auxmov<=0.75  && (this.y+1!=nlinhas && !checkpos(this, this.x,this.y+1)) || (this.y+1==nlinhas && !checkpos(this, this.x,0)) ){//deambula baixo
+              if(this.y+1<=nlinhas){
+                this.y++;
+              }
+            }else if(auxmov<=1 &&  (this.x-1!=0 && !checkpos(this, this.x-1,this.y)) || (this.x-1==0 && !checkpos(this, ncolunas,this.y)) ){//deambula esquerda
+              if(this.x-1>=0){
+                this.x--;
+              }
             }
           }
 
@@ -185,8 +328,44 @@
             projectos[i].childNodes[3].style.position="absolute";
             projectos[i].childNodes[3].style.bottom="0px";
             projectos[i].childNodes[3].style.fontSize="10px";
+
+            /*
+            .expandido
+            >p
+              font-size: 12px
+              opacity: 1
+              &:nth-child(1)
+                font-size: 18px
+                margin-bottom: 0px
+            >img
+              height: auto
+              opacity: 1
+            */
+
             this.vel=0;
             }
+
+            this.qqtimeout[i]=setTimeout(function() {
+              var boobies = document.getElementsByClassName("expandido");
+              var index = 0, length = boobies.length;
+              for ( ; index < length; index++) {
+
+                var two_boobies = boobies[index].getElementsByTagName("p");
+                var two_index = 0, two_length = two_boobies.length;
+                for ( ; two_index < two_length; two_index++) {
+                  two_boobies[two_index].style.opacity="1";
+                }
+
+                var two_boobies = boobies[index].getElementsByTagName("img");
+                var two_index = 0, two_length = two_boobies.length;
+                for ( ; two_index < two_length; two_index++) {
+                  two_boobies[two_index].style.opacity="1";
+                }
+
+              }
+            }, 500);
+
+
             /*grande.id="projetogrande"
             //começa pequeno e invisivel
             grande.classList.add("contraido");*/
@@ -202,17 +381,30 @@
             projectos[i].style.height=altura+"px";
             projectos[i].classList.remove("expandido");
             projectos[i].classList.add("normal");
-            if(projectos[i].isgray){
-              projectos[i].classList.add("grayscale");
+            if(projectos[i].isgray){ 
+              if(!(window.location.href.indexOf("editorial") > -1)){
+                projectos[i].classList.add("grayscale");
+              }
             }
-            
             this.vel=1;
             }
-
+              var boobies = document.getElementsByClassName("normal");
+              var index = 0, length = boobies.length;
+              for ( ; index < length; index++) {
+                var two_boobies = boobies[index].getElementsByTagName("p");
+                var two_index = 0, two_length = two_boobies.length;
+                for ( ; two_index < two_length; two_index++) {
+                  two_boobies[two_index].style.opacity="0";
+                }
+                var two_boobies = boobies[index].getElementsByTagName("img");
+                var two_index = 0, two_length = two_boobies.length;
+                for ( ; two_index < two_length; two_index++) {
+                  two_boobies[two_index].style.opacity="0";
+                }
+              }
             /*grande.id="projetogrande"
             //começa pequeno e invisivel
             grande.classList.add("contraido");*/
-
           }
 
         }
@@ -220,11 +412,6 @@
 
         //variavel vai guardar as posições que os botões do overlay estao a ocupar
         var overlayblock=[];
-
-        let cima=0;
-        let baixo=0;
-        let esquerda=0;
-        let direita=0;
 
         var projetos=[];
 
@@ -239,8 +426,15 @@
         grelha.id="grelha";
         grelha.classList.add("grelha");
 
-        grelha.style.height=arredonda_cima(screen.height*2)+"px";
-        grelha.style.width=arredonda_cima(screen.width*2)+"px";
+        if(window.location.href.indexOf("index") > -1){
+          grelha.style.height=arredonda_cima(screen.height*1)+"px";
+          grelha.style.width=arredonda_cima(screen.width*1)+"px";
+        }else{
+          grelha.style.height=arredonda_cima(screen.height*6)+"px";
+          grelha.style.width=arredonda_cima(screen.height*6)+"px";
+        }
+        
+        
 
         document.body.appendChild(grelha);
 
@@ -257,9 +451,15 @@
         var auxxxx = urlParams.get('x');
         var auyyyy = urlParams.get('y');
         if(auxxxx==null){
-          window.scroll(largura_tela*1.1, altura_tela*1);
+          window.scroll(largura_tela*1.1%tamanho_celula, altura_tela*1%tamanho_celula);
         }else{
-          window.scroll(auxxxx, auyyyy);
+
+            if(window.location.href.indexOf("index") > -1){
+              window.scroll(auxxxx, auyyyy);
+              console.log("index");
+            }else{
+              window.scroll(auxxxx%tamanho_celula, auyyyy%tamanho_celula);
+            }
         }
         
 
@@ -300,7 +500,11 @@
 
         quadrado.className= projetos[i].tipo;
         quadrado.classList.add("projeto");
-        quadrado.classList.add("grayscale");
+
+        if(!(window.location.href.indexOf("editorial") > -1)){
+          quadrado.classList.add("grayscale");
+        }
+        
         quadrado.classList.add("normal");
         quadrado.classList.add(projetos[i].id);
         quadrado.setAttribute("numero",projetos[i].id);
@@ -329,8 +533,10 @@
           //move cada projeto para posições aleatorias
           for(var i = 0; i < projetos.length; i++){
 
-            var xset=Math.floor(Math.random() * ncolunas-1);
-            var yset=Math.floor(Math.random() * nlinhas-1);
+            var xset=Math.floor(Math.random() * (ncolunas-1 - 2) + 2);
+
+            var yset=Math.floor(Math.random() * (nlinhas-1 - 2) + 2);
+
             var ha_igual=false;
 
             for(var j = 0; j < projetos.length; j++){//verifica se ha algum projeto com este x e y
@@ -379,19 +585,37 @@
         }
         //
         //framerate
-        var t=setInterval(draw,(1000/projetos.length/2));
+        var t=setInterval(draw,(1000/projetos.length/1));
 
         //ir buscar imagem noise
         var noiseimg=document.getElementById("noise");
-        noiseimg.style.width=largura_tela+"px";
-        noiseimg.style.height=altura_tela+"px";
+        noiseimg.style.width=screen.width*1.2+"px";
+        noiseimg.style.height=screen.height*1.2+"px";
 
         var epa=0;
+        var aux_offset=0;
         function draw() {
 
           if(window.location.href.indexOf("index") > -1){
+            var epa_next=epa+1;
+            if(epa_next==projetos.length){
+              epa_next=0;
+            }
             if(projetos[epa].vel==1){
-            projetos[epa].move();
+
+              if(projetos[epa].ativo){
+                projetos[epa_next].tp();
+                projetos[epa].move();
+              }else{
+                projetos[epa_next].tp();
+                projetos[epa].move();
+                /*if(projetos[epa].tick==0){
+                  projetos[epa].move();
+                  projetos[epa].tick=1;
+                }else{
+                  projetos[epa].tick=0;
+                }*/
+              }
             }else{
               //console.log("stopped");
             }
@@ -405,18 +629,21 @@
           if(epa%2==0){
             //move a imagem de noise aleatoriamente
             var auxbgtop=Math.random()*(scrollY - (scrollY-200)) + (scrollY-200);
-            if(auxbgtop>altura_tela*2){
-              auxbgtop=altura_tela*2;
+            if(auxbgtop>altura_tela*3-noiseimg.offsetHeight-200){
+              auxbgtop=altura_tela*3-noiseimg.offsetHeight-200;
             }
             var auxbgleft=Math.random()*(scrollX - (scrollX-200)) + (scrollX-200);
-            if(auxbgleft>largura_tela*2){
-              auxbgleft=largura_tela*2;
+            if(auxbgleft>largura_tela*3-noiseimg.offsetWidth-200){
+              auxbgleft=largura_tela*3-noiseimg.offsetWidth-200;
             }
             noiseimg.style.top=auxbgtop+"px";
             noiseimg.style.left=auxbgleft+"px";
           }
+
+          
         }
 
+       
 
         //POR EM CLASSE AS GHRELHAS
         
@@ -482,6 +709,8 @@
 
     //quando alum botao de filtro é premido, manda para uma função de ativar ou desativar aquela categoria
     function myFunction(here, tipo) {
+      naoepradescer=true;
+      console.log("mudafiltro");
       if(here.classList.contains("uncheck")){
           ativa(tipo);
           var grayscale_aux = document.getElementsByClassName(tipo);
@@ -493,6 +722,13 @@
           }
           here.classList.remove("uncheck");
           here.classList.add("check");
+
+          if(window.innerWidth<1000){
+            here.classList.remove("unclicked");
+            here.classList.add("clicked");
+          }
+          
+
           here.classList.add(here.name);
           here.childNodes[0].style.color="rgb(213,213,213)";
 
@@ -500,15 +736,24 @@
           desativa(tipo);
           var grayscale_aux = document.getElementsByClassName(tipo);
           for(var i = 0; i < grayscale_aux.length; i++){
-             grayscale_aux[i].classList.add("grayscale");
+
+              if(!(window.location.href.indexOf("editorial") > -1)){
+                grayscale_aux[i].classList.add("grayscale");
+              }
+             
+
           }
           here.classList.remove("check");
           here.classList.add("uncheck");
+          if(window.innerWidth<1000){
+            here.classList.remove("clicked");
+            here.classList.add("unclicked");
+          }
           here.classList.remove(here.name);
           here.classList.remove("grayscale");
           here.childNodes[0].style.color="rgb(120,120,120)";
       }
-      event.stopPropagation();
+     burn_them();
     } 
 
 
@@ -539,7 +784,6 @@
              };
              projectsaux[i].onmouseout = function () {
                projetos[this.getAttribute("numero")].contrai();
-
                //console.log("numero "+this.getAttribute("numero"));
              };
           }
@@ -558,17 +802,48 @@ var overlays=document.getElementsByClassName("overlay");
 //drag scroll
 var isMouseDown = false;
 var xfirst, yfirst;
+var incsx=0;
+var incsy=0;
 document.onmousedown = function(p) {
   if(p.button == 1 ){
     p.preventDefault();
   }else if(p.button==0){isMouseDown = true; xfirst=p.pageX; yfirst=p.pageY}};
-document.onmouseup   = function() { isMouseDown = false;  overlayback();};
+document.onmouseup   = function() { isMouseDown = false;  overlayback(); incsx=0;incsy=0; 
+
+          if(window.location.href.indexOf("editorial") > -1){
+            if(scrollY>bottomest_one){
+              window.scroll(scrollX,bottomest_one);
+            }
+          }else if(window.location.href.indexOf("projeto") > -1){
+            if(scrollY>document.getElementById("txt2").offsetTop){
+              window.scroll(scrollX,document.getElementById("txt2").offsetTop);
+              }
+          }else if(window.location.href.indexOf("submit") > -1){
+            if(scrollY>document.getElementById("submm").offsetTop){
+            window.scroll(scrollX,document.getElementById("submm").offsetTop);
+            }
+          }
+};
 
   var div = document.body;
     document.onmousemove = function(e){
       //case 1 clica apenas com o lado esquerdo do rato
-        if(isMouseDown){
-        window.scrollBy(xfirst-e.pageX, yfirst-e.pageY);
+        if(isMouseDown && !(window.location.href.indexOf("editorial") > -1) && !(window.location.href.indexOf("about") > -1) && !(window.location.href.indexOf("submit") > -1) && !(window.location.href.indexOf("projeto") > -1)){
+        
+        window.scrollBy(xfirst-e.pageX+incsx, yfirst-e.pageY+incsy);
+
+        if(scrollX>largura_tela*2){
+          incsx-=largura_tela;
+        }
+        if(scrollY>altura_tela*2){
+          incsy-=altura_tela;
+        }
+        if(scrollX<largura_tela-screen.width){
+          incsx+=largura_tela;
+        }
+        if(scrollY<altura_tela-screen.height){
+          incsy+=altura_tela;
+        }
 
           if(!window.location.href.indexOf("projeto") > -1){
             for(var i=0; i<overlays.length;i++){
@@ -576,10 +851,17 @@ document.onmouseup   = function() { isMouseDown = false;  overlayback();};
             }
           }
 
+
         }
     }
 
+    document.touchend  = function(uu){
+      console.log("aaaaaaa");
+    }
+
     function overlayback(){
+
+      
 
       if(!window.location.href.indexOf("projeto") > -1){
 
@@ -587,7 +869,12 @@ document.onmouseup   = function() { isMouseDown = false;  overlayback();};
         overlays[i].style.opacity=1;
       }
 
-      
+      if (window.location.href.indexOf("editorial") > -1) {
+               //move a caixa do filtro para a sua posição inicial
+      document.getElementById("filter").style.top=window.arredonda_cima(scrollY+window.innerHeight)-tamanho_celula*4-3+"px";
+      document.getElementById("filter").style.left=window.arredonda_cima(scrollX+window.innerWidth)-tamanho_celula*4-3+"px";
+
+        }else if(!(window.location.href.indexOf("submit") > -1) && !(window.location.href.indexOf("projeto") > -1) ){
       //move a caixa do titulo a cada frame
       document.getElementById("titulo").style.top=window.arredonda_cima(scrollY)+tamanho_celula+1+"px";
       document.getElementById("titulo").style.left=window.arredonda_cima(scrollX)+tamanho_celula+1+"px";
@@ -595,6 +882,7 @@ document.onmouseup   = function() { isMouseDown = false;  overlayback();};
       //move a caixa do filtro para a sua posição inicial
       document.getElementById("filter").style.top=window.arredonda_cima(scrollY+window.innerHeight)-tamanho_celula*3-3+"px";
       document.getElementById("filter").style.left=window.arredonda_cima(scrollX+window.innerWidth)-tamanho_celula*4-3+"px";
+      
 
       //move a caixa do editorial para a sua posição inicial
       document.getElementById("editorial").style.top=window.arredonda_cima(scrollY)+tamanho_celula-3+"px";
@@ -611,11 +899,55 @@ document.onmouseup   = function() { isMouseDown = false;  overlayback();};
       //move a caixa do submit para a sua posição inicial
       document.getElementById("submit").style.top=window.arredonda_cima(scrollY)+tamanho_celula-3+"px";
       document.getElementById("submit").style.left=window.arredonda_cima(scrollX+window.innerWidth)-tamanho_celula*12-3+"px";
+      
+        if(window.innerWidth<1000){
+          document.getElementById("submit").style.top=window.arredonda_cima(scrollY)+tamanho_celula*4+1+"px";
+        document.getElementById("submit").style.left=window.arredonda_cima(scrollX)+tamanho_celula*1+1+"px"; 
+        document.getElementById("editorial").style.top=window.arredonda_cima(scrollY)+tamanho_celula*4+1+"px"; 
+        document.getElementById("editorial").style.left=arredonda_cima(scrollX+tamanho_celula*4)+1+"px"; 
+        }
+      }
 
+
+
+      if (!(window.location.href.indexOf("editorial") > -1) && !(window.location.href.indexOf("about") > -1)) {
       //move a caixa do lupa para a sua posição inicial
       document.getElementById("lupa").style.top=window.arredonda_cima(scrollY+window.innerHeight)-tamanho_celula*3-3+"px";
       document.getElementById("lupa").style.left=window.arredonda_cima(scrollX+window.innerWidth)-tamanho_celula*6-3+"px";
+
+                var docauxaux=document.getElementById("lupa");
+                
+                var inps=document.getElementById("inps");
+                
+                if(inps!=null){
+                  inps.style.transition ="opacity 0.1s";
+                  docauxaux.style.transition ="opacity 0.1s";
+                }
+              if(!(window.location.href.indexOf("submit") > -1) && !(window.location.href.indexOf("projeto") > -1) && document.getElementById("lupa").classList.contains("unclicked")){
+
+                document.getElementById("inps").style.width="0px";
+                document.getElementById("inps").style.top=document.getElementById("lupa").style.top;
+                document.getElementById("inps").style.left=document.getElementById("lupa").style.left;
+                document.getElementById("inps").style.zIndex="3";
+                document.getElementById("inps").classList.remove("clicked");
+    
+              }else if(!(window.location.href.indexOf("projeto") > -1) && !(window.location.href.indexOf("submit") > -1)){
+                inps.style.top=parseInt(docauxaux.style.top)+"px";
+                inps.style.left=parseInt(docauxaux.style.left)-4*tamanho_celula+"px";
+                inps.style.height=parseInt(docauxaux.style.height)+"px";
+                inps.style.width=parseInt(docauxaux.style.width)+4*tamanho_celula+"px";
+                inps.id="inps";
+                document.getElementById("inps").style.opacity=1;
+                document.getElementById("lupa").style.left=parseInt(document.getElementById("lupa").style.left)-5*tamanho_celula+"px";
+                inps.classList.add("clicked");
+                inps.style.borderLeftWidth ="0px";
+                document.getElementById("lupa").style.borderRightWidth ="0px";
+              }
+              }
       }
+
+      //modifica os objetivos dos projetos dinamicamente
+      re_objetivos();
     }
 
     //move a caixa do titulo para a sua posição inicial
@@ -653,7 +985,11 @@ document.onmouseup   = function() { isMouseDown = false;  overlayback();};
     //largura e altura da caixa do about
     document.getElementById("about").style.width=tamanho_celula*2+3+"px";
     document.getElementById("about").style.height=tamanho_celula*1+3+"px";
-
+    
+    if(window.innerWidth<1000){
+      document.getElementById("about").style.top=arredonda_cima(scrollY+tamanho_celula*4)-3+"px";
+      document.getElementById("about").style.left=arredonda_cima(scrollX+tamanho_celula)-3+"px";
+    }
 
     //move a caixa do submit para a sua posição inicial
     document.getElementById("submit").style.top=window.arredonda_cima(scrollY)+tamanho_celula-3+"px";
@@ -663,13 +999,81 @@ document.onmouseup   = function() { isMouseDown = false;  overlayback();};
     document.getElementById("submit").style.height=tamanho_celula*1+3+"px";
 
 
+              if (window.location.href.indexOf("editorial") > -1) {
+                //move a caixa do search para a sua posição inicial
+                document.getElementById("search").style.top=window.arredonda_cima(scrollY)+tamanho_celula*4+1+"px";
+                document.getElementById("search").style.left=window.arredonda_cima(scrollX)+tamanho_celula+1+"px";
+                //largura e altura da caixa do search
+                document.getElementById("search").style.width=tamanho_celula*6+"px";
+                document.getElementById("search").style.height=tamanho_celula*1+"px";
+              }
+
+    if(window.innerWidth<1000){
+      document.getElementById("about").style.top=arredonda_cima(scrollY+tamanho_celula*4)-3+"px";
+      document.getElementById("about").style.left=arredonda_cima(scrollX+tamanho_celula)-3+"px";
+
+      document.getElementById("search").style.top=arredonda_cima(scrollY+tamanho_celula*6)+"px";
+      document.getElementById("search").style.left=arredonda_cima(scrollX)+tamanho_celula+1+"px";
+
+      document.getElementById("submit").style.top=arredonda_cima(scrollY+tamanho_celula*4)-3+"px";
+      document.getElementById("submit").style.left=arredonda_cima(scrollX+tamanho_celula*4)-3+"px";
+      if (window.location.href.indexOf("editorial") > -1) {
+        document.getElementById("editorial").style.display="none";
+      }
+      var a = document.getElementsByClassName("filtros");
+      var b=8;
+      var c=1;
+      for(var i=0;i<a.length;i++){
+        a[i].childNodes[0].style.fontSize="14px";
+        a[i].style.top=arredonda_cima(scrollY+tamanho_celula*b)-3+"px";
+        a[i].style.left=arredonda_cima(scrollX+tamanho_celula*c)-3+"px";
+
+        a[i].style.width=tamanho_celula*2+3+"px";
+        a[i].style.height=tamanho_celula*1+3+"px";
+
+        c+=3;
+        if(c>(window.innerWidth/tamanho_celula)-2){
+          b+=2;
+          c=1;
+        }
+      }
+
+    }
+
+
+    if (window.location.href.indexOf("index") > -1) {
     //move a caixa do lupa para a sua posição inicial
     document.getElementById("lupa").style.top=window.arredonda_cima(scrollY+window.innerHeight)-tamanho_celula*3-3+"px";
     document.getElementById("lupa").style.left=window.arredonda_cima(scrollX+window.innerWidth)-tamanho_celula*6-3+"px";
     //largura e altura da caixa do lupa
     document.getElementById("lupa").style.width=tamanho_celula*1+3+"px";
     document.getElementById("lupa").style.height=tamanho_celula*1+3+"px";
+   
 
+              var docauxaux=document.getElementById("lupa");
+              var inps=document.createElement("input");
+              inps.style.position="absolute";
+              inps.classList.add("overlay");
+              inps.style.top=parseInt(docauxaux.style.top)+3+"px";
+              inps.style.left=parseInt(docauxaux.style.left)-5*tamanho_celula+3+"px";
+              inps.style.height=parseInt(docauxaux.style.height)+"px";
+              inps.style.width=parseInt(docauxaux.style.width)+4*tamanho_celula+"px";
+              inps.id="inps";
+              inps.placeholder="search...";
+              inps.style.outline="none";
+              inps.style.fontSize="15px";
+              inps.style.paddingBottom ="4px";
+              document.body.appendChild(inps);
+
+              document.getElementById("inps").style.width="0px";
+              document.getElementById("inps").style.left=document.getElementById("lupa").style.left;
+              document.getElementById("inps").style.zIndex="3";
+              document.getElementById("inps").style.opacity=0;
+
+              document.getElementById("inps").onclick = function () {
+             press(this, 1);
+           };
+      }
 
     if (window.location.href.indexOf("index") > -1) {
       press(document.getElementById("agents"),null);
@@ -710,7 +1114,6 @@ document.onmouseup   = function() { isMouseDown = false;  overlayback();};
         if(elem.id!="filter" && elem.id!="lupa" && type!=null){
           muda_pagina(elem.id, null, scrollX, scrollY);
         }
-
           //aumenta lista de filtros
           if(elem.id=="filter"){
             //lista de botoes filtro aparece
@@ -720,41 +1123,73 @@ document.onmouseup   = function() { isMouseDown = false;  overlayback();};
                 botfilt[i].style.top=-3-tamanho_celula/2*(i+1)+"px";
                 botfilt[i].style.borderWidth=1+"px";
                 botfilt[i].childNodes[0].style.fontSize=14+"px";
-                
                 botfilt[i].style.left=-3+"px";
               }
-          }
-      }else{
-            //recolhe lista de filtros
-          if(elem.id=="filter" || elem.id=="lupa"){
-            elem.classList.remove("clicked");
-            elem.classList.add("unclicked");
-            //largura e altura da caixa do filtro volta a aumentar
-            elem.style.width=elem.offsetWidth+2+"px";
-            elem.style.height=elem.offsetHeight+2+"px";
-            if(elem.id=="filter"){
-              //lista de botoes filtro recolhe
-              for (var i = 0; i < botfilt.length; i++) {
-                botfilt[i].style.height=0+"px";
-                botfilt[i].style.top=0+"px";
-                botfilt[i].style.left=0+"px";
-                botfilt[i].style.borderWidth=0+"px";
-                botfilt[i].childNodes[0].style.fontSize=0+"px";
 
-                botfilt[i].style.left=3+"px";
+          }
+          if(elem.id=="lupa"){
+              if(document.getElementById("inps") != null){
+                var docauxaux=document.getElementById("lupa");
+                var inps=document.getElementById("inps");
+                inps.style.top=parseInt(docauxaux.style.top)+"px";
+                inps.style.left=parseInt(docauxaux.style.left)-4*tamanho_celula+"px";
+                inps.style.height=parseInt(docauxaux.style.height)+"px";
+                inps.style.width=parseInt(docauxaux.style.width)+4*tamanho_celula+"px";
+                inps.id="inps";
+                document.getElementById("inps").style.opacity=1;
+                document.getElementById("lupa").style.left=parseInt(document.getElementById("lupa").style.left)-5*tamanho_celula+"px";
+                inps.classList.add("clicked");
+                inps.style.borderLeftWidth ="0px";
+                document.getElementById("lupa").style.borderRightWidth ="0px";
+
+              }
+            }
+          }else{
+            //recolhe lista de filtros
+          if(elem.id=="filter" || elem.id=="lupa" ){
+            if(!naoepradescer){
+              elem.classList.remove("clicked");
+              elem.classList.add("unclicked");
+              //largura e altura da caixa do filtro volta a aumentar
+              elem.style.width=elem.offsetWidth+2+"px";
+              elem.style.height=elem.offsetHeight+2+"px";
+              if(elem.id=="filter"){
+                //lista de botoes filtro recolhe
+                for (var i = 0; i < botfilt.length; i++) {
+                  botfilt[i].style.height=0+"px";
+                  botfilt[i].style.top=0+"px";
+                  botfilt[i].style.left=0+"px";
+                  botfilt[i].style.borderWidth=0+"px";
+                  botfilt[i].childNodes[0].style.fontSize=0+"px";
+
+                  botfilt[i].style.left=3+"px";
+                }
+              }
+              if(elem.id=="lupa"){
+                document.getElementById("lupa").style.top=window.arredonda_cima(scrollY+window.innerHeight)-tamanho_celula*3-3+"px";
+                document.getElementById("lupa").style.left=window.arredonda_cima(scrollX+window.innerWidth)-tamanho_celula*6-3+"px";
+
+                document.getElementById("inps").style.width="0px";
+                document.getElementById("inps").style.left=document.getElementById("lupa").style.left;
+                document.getElementById("inps").style.zIndex="3";
+                document.getElementById("inps").classList.remove("clicked");
+                
               }
             }
           }
+          naoepradescer=false;
       }
-
+      whos_first=1;
     }
 
-
-    
-
-    var tttg=setInterval(butavoid,1000);
+    var tttg=setInterval(butavoid,100);
 
     function butavoid(){
+      var yeeaw = document.getElementsByClassName("yoyoyo");
+
+      for(var jack=0;jack<yeeaw.length;jack++){
+        yeeaw[jack].remove();
+      }
         //ir buscar elementos do overlay
         var elemoovers = document.getElementsByClassName("overlay");
         //este array quarda as posições x e y onde os projetos nao podem pisar
@@ -781,8 +1216,8 @@ document.onmouseup   = function() { isMouseDown = false;  overlayback();};
             overlayblock.push(yips%nlinhas);
 
             //mostra as hit-boxes dos botoes do overlay
-            /*
-            var suxauxdiv=document.createElement("div");
+            
+            /*var suxauxdiv=document.createElement("div");
             suxauxdiv.classList.add("yoyoyo");
             suxauxdiv.style.position="absolute";
             suxauxdiv.style.width="10px";
@@ -792,8 +1227,8 @@ document.onmouseup   = function() { isMouseDown = false;  overlayback();};
             suxauxdiv.style.left=(xis%ncolunas)*tamanho_celula+"px";
             suxauxdiv.style.zIndex=7;
             document.getElementById("grelha").appendChild(suxauxdiv);
-            delete suxauxdiv;
-            */
+            delete suxauxdiv;*/
+            
             }
           }
 
@@ -803,6 +1238,49 @@ document.onmouseup   = function() { isMouseDown = false;  overlayback();};
           console.log(hauxh);
           console.log("more");*/
         }
+    }    
+
+    function re_objetivos(){
+          //define coordenadas objetivo de cada tipo de projeto
+          for(var i = 0; i < tipos.length; i++){
+
+            var lim_um_x=scrollX;
+            var lim_dois_x=scrollX+window.innerWidth;
+
+            var lim_um_y=scrollY;
+            var lim_dois_y=scrollY+window.innerHeight;
+
+            lim_um_x=arredonda_cima(lim_um_x / tamanho_celula)%ncolunas;
+            lim_dois_x=arredonda_cima(lim_dois_x / tamanho_celula)%ncolunas;
+
+            lim_um_y=arredonda_cima(lim_um_y / tamanho_celula)%nlinhas;
+            lim_dois_y=arredonda_cima(lim_dois_y / tamanho_celula)%nlinhas;
+
+
+
+            var aux_randx=Math.floor(Math.random() * ncolunas);
+            var aux_randy=Math.floor(Math.random() * nlinhas);
+
+            for(var j = 0; j < projetos.length; j++){
+              if(projetos[j].tipo==tipos[i]){
+                //projetos[j].set_objetivo(aux_randx, aux_randy);
+              }
+            }
+            /*console.log(aux_randx, aux_randy);
+            var suxauxdiv=document.createElement("div");
+            suxauxdiv.classList.add("yoyoyoyo");
+            suxauxdiv.style.position="absolute";
+            suxauxdiv.style.width="10px";
+            suxauxdiv.style.height="10px";
+            suxauxdiv.style.backgroundColor="blue";
+            suxauxdiv.style.top=aux_randy*tamanho_celula+"px";
+            suxauxdiv.style.left=aux_randx*tamanho_celula+"px";
+            suxauxdiv.style.zIndex=9;
+            document.getElementById("grelha").appendChild(suxauxdiv);
+            delete suxauxdiv;*/
+          }
+
+            
     }    
 
     

@@ -27,7 +27,7 @@
 
 <body id="boody">
 
-  <img id="noise" src="assets/img/noise.jpg">
+  <img id="noise" src="assets/img/noisee.png">
 
   <div id="titulo" class="overlay">
     <h1>comp archive(){</h1>
@@ -65,41 +65,80 @@
 
   <form id="desc" class="overlay" >
     <div class="fit">
-      <p>NAME</p>
-      <input placeholder="your name" type="text" name="nome">
-    </div>
-    <div class="fit">
-      <p>EMAIL</p>
-      <input placeholder="your email" type="text" name="email">
-    </div>
-    <div class="full">
-      <p>TITLE</p>
-      <input placeholder="project title" type="text" name="title">
-    </div>
-    <div class="fit">
-      <p>YEAR</p>
-      <input placeholder="project year" type="text" name="year">
-    </div>
-    <div class="fit">
-      <p>AUTHOR</p>
-      <input placeholder="project author" type="text" name="author">
-    </div>
-    <div class="full">
-      <p>ABSTRACT</p>
-      <textarea placeholder="summary..." type="text" name="abstract"> </textarea>
-    </div>
-    <div class="full">
-      <p>KEYWORDS</p>
-      <input placeholder="keywords..." type="text" name="keywords">
-    </div>
-  </form>
+      <p>name</p>
+      <input required placeholder="your name" type="text" name="nome" 
+      oninvalid="this.setCustomValidity('This field is required')"
+      oninput="this.setCustomValidity('')">
 
-      <div id="submm" class="overlay" >
-      <p>submit</p>
     </div>
+    <div class="fit">
+      <p>email</p>
+      <input required placeholder="your email" type="text" name="email" 
+      oninvalid="this.setCustomValidity('This field is required')"
+      oninput="this.setCustomValidity('')">
+    </div>
+    <div class="fit">
+      <p>year</p>
+      <input required placeholder="project year" type="text" name="year" 
+      oninvalid="this.setCustomValidity('This field is required')"
+      oninput="this.setCustomValidity('')">
+    </div>
+    <div class="fit">
+      <p>authors</p>
+      <input required placeholder="project author" type="text" name="author" 
+      oninvalid="this.setCustomValidity('This field is required')"
+      oninput="this.setCustomValidity('')">
+    </div>
+    <div class="full">
+      <p>title</p>
+      <input required placeholder="project title" type="text" name="title" 
+      oninvalid="this.setCustomValidity('This field is required')"
+      oninput="this.setCustomValidity('')">
+    </div>
+    <div class="full">
+      <p>subtitle</p>
+      <input required placeholder="project subtitle" type="text" name="subtitle" 
+      oninvalid="this.setCustomValidity('This field is required')"
+      oninput="this.setCustomValidity('')">
+    </div>
+    <div class="full">
+      <p>abstract</p>
+      <textarea required placeholder="summary..." type="text" name="abstract" 
+      oninvalid="this.setCustomValidity('This field is required')"
+      oninput="this.setCustomValidity('')"> </textarea>
+    </div>
+    <div class="full">
+      <p>text</p>
+      <textarea required placeholder="summary..." type="text" name="abstract" 
+      oninvalid="this.setCustomValidity('This field is required')"
+      oninput="this.setCustomValidity('')"> </textarea>
+    </div>
+    <div class="full">
+      <p>media</p>
+
+      <label id="FAKE" class="overlay unclicked" onclick="pressfile(this)" for="img"></label>
+      <input style="opacity: 0;position: absolute;" value="Select image or video file" required type="file" id="img" name="img" accept="image/*, video/*" 
+      oninvalid="this.setCustomValidity('This field is required')"
+      oninput="this.setCustomValidity('')">
+    </div>
+    <div class="full">
+      <p>categories</p>
+      <input required placeholder="project subtitle" type="text" name="subtitle" 
+      oninvalid="this.setCustomValidity('This field is required')"
+      oninput="this.setCustomValidity('')">
+    </div>
+    <div class="full"  id="lastt">
+      <p>tools</p>
+      <input required placeholder="project subtitle" type="text" name="subtitle" 
+      oninvalid="this.setCustomValidity('This field is required')"
+      oninput="this.setCustomValidity('')">
+    </div>
+    
+  </form>
+      <input id="submm" class="overlay unclicked" type="submit" value="submit" name="submit" form="desc">
 
   <div id="auth" class="overlay" >
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p id="authp">do you have a project that fits in our collection? have it displayed as an agent by filling and submitting its info. hopefully, it will be selected!</p>
   </div>
 
 

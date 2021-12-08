@@ -1,12 +1,17 @@
+$audio: #4b8e6f
+$video: #e29558
+$app: #db7679
+$escuro: rgb(120,120,120)
+
 html, body 
   margin: 0
   padding: 0
+  scrollbar-width: thin
 
 body
-  cursor: grab
   background-color: rgb(213,213,213)
   overflow: hidden
-  cursor: crosshair 
+  cursor: url("cursor.png") 13 13, auto
 
 .overlay
   position: absolute
@@ -14,18 +19,24 @@ body
   z-index: 4
   background-color: rgb(213,213,213)
   border-style:  solid
-  border-color: rgb(120,120,120)
+  border-color: $escuro
   transition: opacity .1s
+  //transition: top 1s, left 0.1s
 
 #noise
-  z-index: 7
+  z-index: 20
   position: absolute
   overflow: hidden
-  opacity: 0.015
+  opacity: 1
   pointer-events: none
+  mix-blend-mode: soft-light
 
-#titulo, #tit, #desc, #cat, #aut, #im1, #im2, #txt, #titabt, #auth, #submm
+#titulo, #tit, #desc, #cat, #aut, #im1, #im2, #txt, #txt2, #titabt, #auth, #search, #im1leg, #im2leg
   border-width: 0.5px
+
+
+#im1leg, #im2leg
+  border-top-width: 0px
 
 #tit, #titabt
   >p
@@ -33,7 +44,7 @@ body
     font-weight: normal
 
 #tit, #desc, #cat, #aut, #im1, #im2, #txt, #lupa, #filter, #titabt, #auth, #submm
-  transition: opacity .1s
+  transition: opacity .5s
   animation: opcty 1s linear
 
 @keyframes opcty
@@ -45,70 +56,113 @@ body
 
 #desc, #cat
   >p
-    font-size: 16px
-    line-height: 25px
+    font-size: 15px
+    line-height: 28px
   >span
     font-family: 'JetBrains Mono', monospace
-    color: rgb(90,90,90)
+    color: $escuro
+
+#descp, #txtp, #txt2p
+  width: 90% !important 
+  position: absolute
+  -ms-transform: translateY(0px) !important 
+  transform: translateY(0px) !important 
+  top: 25px
+  margin-left: 1vw
+
+#authp  
+  width: 90% !important 
+  position: absolute
+  -ms-transform: translateY(0px) !important 
+  transform: translateY(0px) !important 
+  top: 25px
+  margin-left: 1vw
+
+#submm
+  color: $escuro
+
+#search
+  font-family: 'JetBrains Mono', monospace
 
 .fit
   width: 44%
   margin-left: 4%
-  margin-top: 4%
+  margin-top: 5%
   display: inline-block
+  color: $escuro
   >input
     width: 96%
     font-family: 'JetBrains Mono', monospace
     background-color: transparent
     border: none
     border-bottom: solid 1px rgb(90,90,90)
+    padding-top: 15px
+    padding-bottom: 15px
   >p
     font-family: 'JetBrains Mono', monospace
+    margin-bottom: 5px
 
 .full
   margin-left: 4%
+  margin-top: 5%
   width: 92%
+  color: $escuro
   >input, >textarea
     width: 99%
     background-color: transparent
     border: none
     border-bottom: solid 1px rgb(90,90,90)
     font-family: 'JetBrains Mono', monospace
+    padding-top: 15px
+    padding-bottom: 15px
   >p
     font-family: 'JetBrains Mono', monospace
+    margin-bottom: 5px
+
+#submm, #img
+  font-family: 'JetBrains Mono', monospace
+
+#FAKE
+  position: relative
+  top: 0
+  left: 0
+  padding: 5px
 
 #subsub
   background-color: rgb(230,230,230)
   border: solid 1px rgb(90,90,90)
 
+#titulo
+  display: flex
+  flex-direction: column
+  justify-content: center
+  padding: 20px
 
 #titulo
   >h1,>h2 
     font-family: 'JetBrains Mono', monospace
     padding: 0px
     margin: 0px
-    padding-left: 15px
-    color: rgb(120,120,120)
+    color: $escuro
 
 #titulo
   >h1
     font-weight: 300
     font-size: 22px
-    padding-top: 20px
 
 #titulo
   >h2
     font-weight: 200
     font-style: italic
     font-size: 12px
-    padding-top: 10px
+    padding-top: 8px
 
 .overlay
   >p
     font-family: 'JetBrains Mono', monospace
     font-weight: 300
     font-size: 14px
-    color: rgb(120,120,120)
+    color: $escuro
     margin: 0
     position: absolute
     top: 50%
@@ -117,11 +171,12 @@ body
     text-align: center
     width: 100%
 
-#tit, #desc, #aut, #im1, #im2, #txt, #auth
+#tit, #desc, #aut, #im1, #im2, #txt, #txt2, #auth
   >p
     text-align: left
     padding-left: 1vw
     width: 97%
+    line-height: 25px
 
 
 #auth
@@ -142,9 +197,9 @@ body
   position: absolute
   height: 0px
   top: 0px
-  color: rgb(120,120,120)
+  color: $escuro
   transition: height .2s, top .2s, border-width .2s
-  border-width: 0px
+  opacity: 0
 
 .filtros
   >p
@@ -167,9 +222,7 @@ hr
   >hr,>vl
     border: 1px solid rgba(120,120,120, 0.5)
 
-$audio: #4b8e6f
-$video: #e29558
-$app: #db7679
+
 
 .audio
   background-color: $audio
@@ -182,7 +235,47 @@ $app: #db7679
 
 .projeto
   animation: opcty 1s linear
-  transition: top .5s, left .5s, width .5s, height .5s, opacity 1s
+  transition: top .5s, left .5s, width .5s, height .5s
+  >p
+    color: rgb(30, 30,30)
+    width: 85%
+    padding-left: 7.5%
+    font-size: 12px
+    opacity: 0
+    transition: font-size .1s
+    transition: opacity .5s, font-size .1s
+    font-family: 'JetBrains Mono', monospace
+    pointer-events: none
+    &:nth-child(1)
+      padding-top: 0px
+      line-height: 25px
+      opacity: 0
+      pointer-events: none
+      color: 30, 30,30
+      font-weight: 600
+      font-size: 14
+      margin-bottom: 4px
+      color: rgb(30, 30,30)
+    &:nth-child(2)
+      line-height: 18px
+      opacity: 0
+      pointer-events: none
+      font-size: 10px
+      line-height: 14px
+      color: rgb(30, 30,30)
+  >img
+    position: absolute
+    bottom: 37px
+    width: 85%
+    padding-left: 7.5%
+    pointer-events: none
+    opacity: 0
+    transition: opacity .5s
+    pointer-events: none
+
+
+.projeto_sem_anim
+  animation: opcty 1s linear
   >p
     color: rgb(0,0,0)
     width: 90%
@@ -193,6 +286,7 @@ $app: #db7679
     &:nth-child(1)
       padding-top: 0px
       line-height: 25px
+      font-size: 18px
     &:nth-child(2)
       line-height: 18px
   >img
@@ -204,11 +298,10 @@ $app: #db7679
     transition: opacity .5s
 
 
-
 .grayscale
   filter: grayscale(1)
 
-.normal
+/*.normal
   >p
     font-size: 0px
     opacity: 0
@@ -216,10 +309,10 @@ $app: #db7679
       font-size: 0px
   >img
     height: 0px
-    opacity: 0
+    opacity: 0*/
 
 
-.expandido
+/*.expandido
   >p
     font-size: 12px
     opacity: 1
@@ -228,6 +321,17 @@ $app: #db7679
       margin-bottom: 0px
   >img
     height: auto
-    opacity: 1
+    opacity: 1*/
+
+
+#inps, #search
+  color: $escuro
+  font-size: 15px
+  padding-bottom: 4px
+  outline: none
+
+#search
+  padding-left: 10px
+
 
 
